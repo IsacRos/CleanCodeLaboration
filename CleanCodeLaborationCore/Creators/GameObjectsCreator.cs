@@ -2,7 +2,7 @@
 
 namespace CleanCodeLaborationCore.Creators;
 
-public class GameObjectsCreators
+public class GameObjectsCreator
 {
     public static Player PlayerFactory(string name, int guesses) => new Player(name, guesses);
 }

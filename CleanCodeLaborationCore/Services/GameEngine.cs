@@ -23,7 +23,7 @@ public class GameEngine
         {
             string target = SetTargetGoal();
             _io.WriteOutput($"Welcome to {_game.GameName}!");
-            //_io.WriteOutput("PRACTICE, number is: " + target + "\n");
+            _io.WriteOutput("PRACTICE, number is: " + target + "\n");
             _io.WriteOutput("Enter your username: " + "\n");
 
             string name = _io.ReadInput();
@@ -37,7 +37,7 @@ public class GameEngine
                 "Incorrect, it took too many guesses.\n"
                 );
 
-            return GameObjectsCreators.PlayerFactory(name, _nGuesses);
+            return GameObjectsCreator.PlayerFactory(name, _nGuesses);
         }
         catch { throw; }
     }
@@ -64,10 +64,10 @@ public class GameEngine
 
     private void GameLoop(string target)
     {
-        string guessInput;
-        string guessResponse;
         try
         {
+            string guessInput;
+            string guessResponse;
             do
             {
                 guessInput = _io.ReadInput().ToUpper();

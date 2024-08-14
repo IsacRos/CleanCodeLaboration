@@ -1,6 +1,6 @@
 ﻿using CleanCodeLaborationCore.Interfaces;
 
-namespace CleanCodeLaborationInfrastructure.UserInterface;
+namespace CleanCodeLaborationApp.UserInterface;
 
 public class ConsoleIO : IIO
 {

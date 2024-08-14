@@ -1,4 +1,5 @@
 ﻿using CleanCodeLaborationCore.Classes;
+using CleanCodeLaborationCore.Creators;
 using CleanCodeLaborationCore.Interfaces;
 using System.Data;
 using System.Net.Http.Headers;
@@ -46,27 +47,26 @@ public class ScoreService
         }
         catch
         {
-            throw new ArgumentException("Couldn't parse score table");
+            throw new ArgumentException("Couldn't parse player data table");
         }
-
     }
 
     private async Task<List<Player>> ParseScoreTable()
     {
-        var scores = await _repo.GetDataTable(_game.GameName);
+        var rawScores = await _repo.GetDataTable(_game.GameName);
 
-        var result = scores
-            .Select(s => s.Split("#&#"))
-            .GroupBy(g => g[0])
-            .Select(group =>
+        var players = rawScores
+            .Select(playerData => playerData.Split("#&#"))
+            .GroupBy(splitPlayerData => splitPlayerData[0])
+            .Select(playerDataGroup =>
             {
-                var player = new Player(group.Key, 0);
-                foreach (var score in group) player.Update(int.Parse(score[1]));
-                return player;
+                var newPlayer = GameObjectsCreator.PlayerFactory(playerDataGroup.Key, 0);
+                foreach (var entry in playerDataGroup) newPlayer.Update(int.Parse(entry[1]));
+                return newPlayer;
             }).ToList();
 
-        result.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
-        return result;
+        players.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
+        return players;
     }
 
 

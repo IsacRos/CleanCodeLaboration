@@ -9,7 +9,7 @@ public class Player
 
     public Player(string name, int guesses)
     {
-        this.Name = name;
+        Name = name;
         TotalGuesses = guesses;
     }
 

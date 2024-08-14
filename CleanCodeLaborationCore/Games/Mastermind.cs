@@ -7,28 +7,29 @@ public class Mastermind : IGame
     public string GameName { get; set; } = "Mastermind";
     public int TargetCount { get; set; } = 5;
     public char[] TargetOptions { get; set; } = ['B', 'R', 'Y', 'P', 'O', 'M'];
-    public string[] ResponseArray { get; set; } = ["W", "O"];
+    public string[] ResponseSymbols { get; set; } = ["W", "O"];
     public int AmountMaxGuesses { get; set; } = 12;
     public bool AllowRepeatedCharacters { get; set; } = true;
 
     public string GetGuessResponse(string guess, string goal)
     {
-        var tempString = string.Empty;
-        var s = guess.Select((g, idx) =>
-        {
-            var amountOfGs = goal.Count(c => c.Equals(g));
-            if (goal[idx].Equals(g))
+        var tempChars = string.Empty;
+        var responseCharacters = guess
+            .Select((guessChar, idx) =>
             {
-                tempString += g;
-                return ResponseArray[0];
-            }
-            else if (goal.Contains(g))
-            {
-                tempString += g;
-                return amountOfGs >= tempString.Count(c => c.Equals(g)) ? ResponseArray[1] : "-";
-            }
-            else return "-";
-        });
-        return string.Concat(s);
+                var correctCharOccurrances = goal.Count(goalChar => goalChar.Equals(guessChar));
+                if (goal[idx].Equals(guessChar))
+                {
+                    tempChars += guessChar;
+                    return ResponseSymbols[0];
+                }
+                else if (goal.Contains(guessChar))
+                {
+                    tempChars += guessChar;
+                    return correctCharOccurrances >= tempChars.Count(c => c.Equals(guessChar)) ? ResponseSymbols[1] : "-";
+                }
+                else return "-";
+            });
+        return string.Concat(responseCharacters);
     }
 }

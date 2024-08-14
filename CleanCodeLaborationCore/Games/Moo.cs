@@ -7,7 +7,7 @@ public class Moo : IGame
     public string GameName { get; set; } = "MooGame";
     public int TargetCount { get; set; } = 4;
     public char[] TargetOptions { get; set; } = ['1','2','3','4','5','6','7','8','9'];
-    public string[] ResponseArray { get; set; } = ["B", "C"];
+    public string[] ResponseSymbols { get; set; } = ["B", "C"];
     public bool AllowRepeatedCharacters { get; set; } = false;
     public int AmountMaxGuesses { get; set; } = 4;
 
