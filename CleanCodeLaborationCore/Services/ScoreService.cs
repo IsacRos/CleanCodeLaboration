@@ -2,7 +2,6 @@
 using CleanCodeLaborationCore.Creators;
 using CleanCodeLaborationCore.Interfaces;
 using System.Data;
-using System.Net.Http.Headers;
 
 namespace CleanCodeLaborationCore.Services;
 
@@ -68,7 +67,4 @@ public class ScoreService
         players.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
         return players;
     }
-
-
-
 }

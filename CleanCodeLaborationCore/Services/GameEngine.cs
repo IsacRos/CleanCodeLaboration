@@ -89,6 +89,5 @@ public class GameEngine
         }
     }
 
-
     private void SetWinCondition(string guess, string target) => _gameWon = guess.Equals(target);
 }
