@@ -16,8 +16,9 @@ namespace MooGame
 			service.AddSingleton<IIO, ConsoleIO>();
             service.AddSingleton<IMenu, ConsoleMenu>();
             service.AddSingleton<IRepository, RepositoryTxt>();
-			service.AddLogging(l => l.AddConsole());
 			service.AddScoped<GameController>();
+
+			service.AddLogging(l => l.AddConsole());
 
 			var gameController = service
 				.BuildServiceProvider()

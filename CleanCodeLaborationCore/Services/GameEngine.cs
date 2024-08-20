@@ -1,5 +1,4 @@
 ﻿using CleanCodeLaborationCore.Classes;
-using CleanCodeLaborationCore.Creators;
 using CleanCodeLaborationCore.Interfaces;
 
 namespace CleanCodeLaborationCore.Services;
@@ -8,13 +7,15 @@ public class GameEngine
 {
     private readonly IGame _game;
     private readonly IIO _io;
+    private readonly IGoalGenerator _goalGen;
     private bool _gameWon;
     private int _nGuesses = 0;
 
-    public GameEngine(IGame game, IIO io)
+    public GameEngine(IGame game, IIO io, IGoalGenerator? goalGen = null)
     {
         _game = game;
         _io = io;
+        _goalGen = goalGen ?? new GoalGenerator();
     }
 
     public Player RunGame()
@@ -32,34 +33,28 @@ public class GameEngine
             GameLoop(target);
 
             _io.WriteOutput(
-                _gameWon ?
-                "Correct, it took " + _nGuesses + " guesses\n" :
-                "Incorrect, it took too many guesses.\n"
+                _gameWon 
+                ? "Correct, it took " + _nGuesses + " guesses\n" 
+                : "Incorrect, it took too many guesses.\n"
                 );
 
-            return GameObjectsCreator.PlayerFactory(name, _nGuesses);
+            return new Player(name, _nGuesses);
         }
         catch { throw; }
     }
 
-    private string SetTargetGoal()
+    public string SetTargetGoal()
     {
-        try
+        string target = string.Empty;
+
+        while (target.Length < _game.TargetCount)
         {
-            Random random = new();
-            string target = string.Empty;
-            while (target.Length < _game.TargetCount)
-            {
-                int nextOption = random.Next(_game.TargetOptions.Length);
-                if (_game.AllowRepeatedCharacters || !target.Contains(_game.TargetOptions[nextOption])) 
-                    target += _game.TargetOptions[nextOption];
-            }
-            return target;
+            int nextOption = _goalGen.Next(_game.TargetOptions.Length);
+            if (_game.AllowRepeatedCharacters || !target.Contains(_game.TargetOptions[nextOption])) 
+                target += _game.TargetOptions[nextOption];
         }
-        catch 
-        { 
-            throw new ArgumentException("Couldn't set target goal"); 
-        }
+
+        return target;
     }
 
     private void GameLoop(string target)
@@ -68,12 +63,13 @@ public class GameEngine
         {
             string guessInput;
             string guessResponse;
+
             do
             {
                 guessInput = _io.ReadInput().ToUpper();
-                var guess = guessInput.Length > _game.TargetCount ?
-                    guessInput.Substring(0, _game.TargetCount) :
-                    guessInput;
+                var guess = guessInput.Length > _game.TargetCount 
+                    ? guessInput.Substring(0, _game.TargetCount) 
+                    : guessInput;
 
                 _io.WriteOutput(guess + "\n");
                 guessResponse = _game.GetGuessResponse(guess, target);

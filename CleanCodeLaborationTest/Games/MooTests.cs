@@ -1,58 +1,57 @@
-﻿namespace CleanCodeLaborationCore.Games.Tests
+﻿namespace CleanCodeLaborationCore.Games.Tests;
+
+[TestClass()]
+public class MooTests
 {
-    [TestClass()]
-    public class MooTests
+    private Moo _moo = new();
+
+    [TestInitialize()]
+    public void Setup()
     {
-        private Moo _moo = new();
+        _moo = new Moo();
+    }
 
-        [TestInitialize()]
-        public void Setup()
-        {
-            _moo = new Moo();
-        }
+    [TestMethod()]
+    public void GetGuessResponseTest_GuessIsCorrect()
+    {
+        string guess = "1234";
+        string goal = "1234";
 
-        [TestMethod()]
-        public void GetGuessResponseTest_GuessIsCorrect()
-        {
-            string guess = "1234";
-            string goal = "1234";
+        string reponse = _moo.GetGuessResponse(guess, goal);
 
-            string reponse = _moo.GetGuessResponse(guess, goal);
+        Assert.AreEqual("BBBB,", reponse);
+    }
 
-            Assert.AreEqual("BBBB,", reponse);
-        }
+    [TestMethod]
+    public void GetGuessResponse_GuessHasCowsAndBulls()
+    {
+        string goal = "1234";
+        string guess = "1243";
 
-        [TestMethod]
-        public void GetGuessResponse_GuessHasCowsAndBulls()
-        {
-            string goal = "1234";
-            string guess = "1243";
+        string response = _moo.GetGuessResponse(guess, goal);
 
-            string response = _moo.GetGuessResponse(guess, goal);
+        Assert.AreEqual("BB,CC", response);
+    }
 
-            Assert.AreEqual("BB,CC", response);
-        }
+    [TestMethod]
+    public void GetGuessResponse_GuessHasOnlyCows()
+    {
+        string goal = "1234";
+        string guess = "4321";
 
-        [TestMethod]
-        public void GetGuessResponse_GuessHasOnlyCows()
-        {
-            string goal = "1234";
-            string guess = "4321";
+        string response = _moo.GetGuessResponse(guess, goal);
 
-            string response = _moo.GetGuessResponse(guess, goal);
+        Assert.AreEqual(",CCCC", response);
+    }
 
-            Assert.AreEqual(",CCCC", response);
-        }
+    [TestMethod]
+    public void GetGuessResponse_GuessHasNoCowsOrBulls()
+    {
+        string goal = "1234";
+        string guess = "5678";
 
-        [TestMethod]
-        public void GetGuessResponse_GuessHasNoCowsOrBulls()
-        {
-            string goal = "1234";
-            string guess = "5678";
+        string response = _moo.GetGuessResponse(guess, goal);
 
-            string response = _moo.GetGuessResponse(guess, goal);
-
-            Assert.AreEqual(",", response);
-        }
+        Assert.AreEqual(",", response);
     }
 }

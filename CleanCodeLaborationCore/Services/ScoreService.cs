@@ -1,5 +1,4 @@
 ﻿using CleanCodeLaborationCore.Classes;
-using CleanCodeLaborationCore.Creators;
 using CleanCodeLaborationCore.Interfaces;
 using System.Data;
 
@@ -7,9 +6,12 @@ namespace CleanCodeLaborationCore.Services;
 
 public class ScoreService
 {
+
     private readonly IIO _io;
     private readonly IRepository _repo;
     private readonly IGame _game;
+
+    private const string SeparationString = "#&#";
 
     public ScoreService(IGame game, IIO io, IRepository repo)
     {
@@ -22,8 +24,8 @@ public class ScoreService
     {
         try
         {
-            string line = player + "#&#" + guesses;
-            await _repo.AddDataLine(line, _game.GameName);
+            string line = player + SeparationString + guesses;
+            await _repo.AddPlayerScore(line, _game.GameName);
         }
         catch
         {
@@ -44,6 +46,10 @@ public class ScoreService
                 _io.WriteOutput(formattedScore);
             }
         }
+        catch(FormatException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
         catch
         {
             throw new ArgumentException("Couldn't parse player data table");
@@ -52,14 +58,14 @@ public class ScoreService
 
     private async Task<List<Player>> ParseScoreTable()
     {
-        var rawScores = await _repo.GetDataTable(_game.GameName);
+        var rawScores = await _repo.GetAllPlayerScores(_game.GameName);
 
         var players = rawScores
-            .Select(playerData => playerData.Split("#&#"))
+            .Select(playerData => playerData.Split(SeparationString))
             .GroupBy(splitPlayerData => splitPlayerData[0])
             .Select(playerDataGroup =>
             {
-                var newPlayer = GameObjectsCreator.PlayerFactory(playerDataGroup.Key, 0);
+                var newPlayer = new Player(playerDataGroup.Key, 0);
                 foreach (var entry in playerDataGroup) newPlayer.Update(int.Parse(entry[1]));
                 return newPlayer;
             }).ToList();

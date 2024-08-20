@@ -2,6 +2,6 @@
 
 public interface IRepository
 {
-    Task AddDataLine(string line, string gameName);
-    Task<List<string>> GetDataTable(string gameName);
+    Task AddPlayerScore(string line, string gameName);
+    Task<List<string>> GetAllPlayerScores(string gameName);
 }

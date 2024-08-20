@@ -4,16 +4,18 @@ namespace CleanCodeLaborationInfrastructure.Data;
 
 public class RepositoryTxt : IRepository
 {
-    public async Task AddDataLine(string line, string gameName)
+    private const string PathString = "-result.txt";
+
+    public async Task AddPlayerScore(string line, string gameName)
     {
-        var writer = new StreamWriter($"{gameName}-result.txt", append: true);
+        var writer = new StreamWriter(gameName + PathString, append: true);
         await writer.WriteLineAsync(line);
         writer.Close();
     }
 
-    public async Task<List<string>> GetDataTable(string gameName)
+    public async Task<List<string>> GetAllPlayerScores(string gameName)
     {
-        var reader = new StreamReader($"{gameName}-result.txt");
+        var reader = new StreamReader(gameName + PathString);
         var result = new List<string>();
         string? line;
         while ((line = await reader.ReadLineAsync()) != null) result.Add(line);
