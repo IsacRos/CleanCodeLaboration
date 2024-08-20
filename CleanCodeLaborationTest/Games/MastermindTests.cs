@@ -3,7 +3,7 @@
     [TestClass()]
     public class MastermindTests
     {
-        private Mastermind? _mastermind;
+        private Mastermind _mastermind = new();
 
         [TestInitialize()]
         public void Setup()
